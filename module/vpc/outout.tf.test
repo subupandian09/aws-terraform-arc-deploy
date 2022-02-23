@@ -1,0 +1,8 @@
+output "Main-Node-Public-IP" {
+  value = resource
+}
+
+
+
+
+
