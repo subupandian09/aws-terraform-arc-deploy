@@ -66,5 +66,4 @@ how to deploy this
 - [Terraform](https://learn.hashicorp.com/terraform) - IaC
 
 ## ✍️ Contributers <a name = "authors"></a>
-- [@mitchellciupak](https://github.com/mitchellciupak)
 - [@subu-pandian](https://github.com/subu-pandian)
