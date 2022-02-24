@@ -22,13 +22,7 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.0.9
-          
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-            
+                  
       - name: Run terraform fmt check
         id: terra-format
         run: terraform fmt -check -diff -recurrsive
