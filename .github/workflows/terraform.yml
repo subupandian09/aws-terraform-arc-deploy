@@ -76,7 +76,7 @@ on:
          env:
            PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
          with:
-              github-token: ${{ secrets.GITHUB_TOKEN }}
+              github-token: ${{ secrets.TOKEN_GITHUB }}
               script: |
                 const output = `#### Terraform Format and Style 🖌\`${{ steps.terra-fmt.outcome }}\`
                 #### Terraform Initialization ⚙️\`${{ steps.terra-init.outcome }}\`
