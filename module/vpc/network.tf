@@ -40,7 +40,7 @@ resource "aws_eip" "nat-ip" {
   depends_on = [aws_internet_gateway.igw]
   vpc        = true
   tags = {
-    Name = join("_", [var.environment, "Elastic IP for NAT Gateway",count.index+1])
+    Name = join("_", [var.environment, "Elastic IP for NAT Gateway", count.index + 1])
     Env  = var.environment
     Type = "EIP"
   }
@@ -71,7 +71,7 @@ resource "aws_nat_gateway" "nat-gw" {
   subnet_id     = element(aws_subnet.publicsubnet.*.id, count.index)
   depends_on    = [aws_eip.nat-ip, aws_subnet.publicsubnet]
   tags = {
-    Name = join("-", [var.environment,"Nat Gateway", count.index + 1])
+    Name = join("-", [var.environment, "Nat Gateway", count.index + 1])
     Env  = var.environment
     Type = "Nat Gateway"
   }
@@ -164,13 +164,13 @@ resource "aws_main_route_table_association" "set-master-default-assoc" {
 
 # Add NAT gateway route to private Route Table
 
- resource "aws_route" "subnets-private-rtable" {
-    provider               = aws.region-app
-    count                  = length(var.private_subnets)
-    route_table_id         = element(aws_route_table.private_route.*.id, count.index)
-    destination_cidr_block = "0.0.0.0/0"
-    nat_gateway_id         = element(aws_nat_gateway.nat-gw.*.id, count.index)
-  }
+resource "aws_route" "subnets-private-rtable" {
+  provider               = aws.region-app
+  count                  = length(var.private_subnets)
+  route_table_id         = element(aws_route_table.private_route.*.id, count.index)
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = element(aws_nat_gateway.nat-gw.*.id, count.index)
+}
 
 
 
