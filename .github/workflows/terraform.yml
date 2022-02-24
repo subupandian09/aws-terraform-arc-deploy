@@ -6,77 +6,77 @@ on:
     branches:
       - main
     
- jobs:
+jobs:
     
-   format:
-     name: fmt
-     runs-on: ubunto-20.04
-     steps:
-       - name: Check out code
-         uses: actions/checkout@v2
+  format:
+    name: fmt
+    runs-on: ubunto-20.04
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
          
-       - name: Setup Terraform
-         uses: hashicorp/setup-terraform@v1
-         with:
-            terraform_version: 1.0.9
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.9
             
-       - name: Run terraform fmt check
-         id: terra-format
-         run: terraform fmt -check -diff -recurrsive ./terraform
+      - name: Run terraform fmt check
+        id: terra-format
+        run: terraform fmt -check -diff -recurrsive ./terraform
          
        
          
          
-   plan:
-     name: plan
+  plan:
+    name: plan
      
-     needs: format
-     env:
-       TF_VAR_allowed_account_id: ${{ secrets.ALLOWED_ACCOUNT_ID }}
-     runs-on: ubunto-20.04
-     strategy:
-       fail-fast: false
+    needs: format
+    env:
+      TF_VAR_allowed_account_id: ${{ secrets.ALLOWED_ACCOUNT_ID }}
+    runs-on: ubunto-20.04
+    strategy:
+      fail-fast: false
        
-     steps:
-       - name: Check out code
-         uses: actions/checkout@v2
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
          
-       - name: Setup Terraform
-         uses: hashicorp/setup-terraform@v1
-         with:
-           terraform_version: 1.0.9
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.9
            
-       - name: Configure AWS Credentials
-         uses: aws-actions/configure-aws-credentials@v1
-         with:
-           aws-region: us-east-1
-           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
            
-       - name: Intialize Terraform
-         id: terra-init
-         run: |
-           terraform init -input=false -no-color
+      - name: Intialize Terraform
+        id: terra-init
+        run: |
+          terraform init -input=false -no-color
            
-       - name: Terraform Validate
-         id: validate
-         run: terraform validate -no-color
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
          
-       - name: Plan terraform
-         id: terra-plan
-         if: github.event_name == 'pull_request'
-         run: terraform plan -input=false -no-color
-         continue-on-error: true
+      - name: Plan terraform
+        id: terra-plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -input=false -no-color
+        continue-on-error: true
          
-       - name: Update Pull Request
-         uses: actions/github-script@0.9.0
-         if: github.event_name == 'pull_request'
-         env:
-           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-         with:
-              github-token: ${{ secrets.TOKEN_GITHUB }}
-              script: |
-                const output = `#### Terraform Format and Style 🖌\`${{ steps.terra-fmt.outcome }}\`
+      - name: Update Pull Request
+        uses: actions/github-script@0.9.0
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+             github-token: ${{ secrets.TOKEN_GITHUB }}
+             script: |
+               const output = `#### Terraform Format and Style 🖌\`${{ steps.terra-fmt.outcome }}\`
                 #### Terraform Initialization ⚙️\`${{ steps.terra-init.outcome }}\`
                 #### Terraform Plan 📖\`${{ steps.terra-plan.outcome }}\`
                 #### Terraform Validation 🤖\`${{ steps.terra-validate.outcome }}\`
