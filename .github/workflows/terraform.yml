@@ -10,7 +10,7 @@ jobs:
     
   format:
     name: fmt
-    runs-on: ubunto-20.04
+    runs-on: self-hosted
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
     needs: format
     env:
       TF_VAR_allowed_account_id: ${{ secrets.ALLOWED_ACCOUNT_ID }}
-    runs-on: ubunto-20.04
+    runs-on: self-hosted
     strategy:
       fail-fast: false
        
