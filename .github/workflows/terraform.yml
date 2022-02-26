@@ -1,30 +1,29 @@
-name: Plan / Test on PR
+name: "Terraform Automation"
 
 on:
-  pull_request:
-    branches:
-      - main
-      
   push:
     branches:
       - main
-      
+  pull_request:
+
 jobs:
-  Format:
-    name: Format
-    runs-on: self-hosted
+  terraform:
+    name: "Terraform"
+    runs-on: ubuntu-latest
     steps:
-      - name: Check out code
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
         uses: actions/checkout@v2
-         
+
+      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.0.9
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-                  
-      - name: Run terraform fmt check
-        id: terra-format
+
+      # Checks that all Terraform configuration files adhere to a canonical format
+      - name: Terraform Format
+        id: fmt
         run: terraform fmt -check
          
        
