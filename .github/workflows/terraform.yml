@@ -4,13 +4,14 @@ on:
   pull_request:
     branches:
       - main
-
-env:
-  NODE_VERSION: '14.x'
-    
+      
+  push:
+    branches:
+      - main
+      
 jobs:
-    
   Format:
+    name: Format
     runs-on: self-hosted
     steps:
       - name: Check out code
@@ -23,7 +24,7 @@ jobs:
                   
       - name: Run terraform fmt check
         id: terra-format
-        run: terraform fmt -check -diff -recurrsive ./terraform
+        run: terraform fmt -check -recursive
          
        
          
