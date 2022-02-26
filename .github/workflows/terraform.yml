@@ -24,7 +24,7 @@ jobs:
                   
       - name: Run terraform fmt check
         id: terra-format
-        run: terraform fmt -check -recursive
+        run: terraform fmt -check
          
        
          
